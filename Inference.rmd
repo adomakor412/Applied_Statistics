@@ -285,12 +285,37 @@ in context. (Note: Picking your own variables, coming up with a research questio
 and analyzing the data to answer this question is basically what you'll need to do for
 your project as well.)
 </div>
+```{r motivation, echo=FALSE}
+# type your code for the Exercise here, and Knit
+"As we just observed, the reduced sample set for mother's weight gain (y) yields that the categorical range defining 'mature' and 'young' mothers (x i.e. maturity) is formulated on age (z) as an independent, random variable. Weight gain depends on maturity (y ~ x), but we can be more robust to fine-tune age cut-offs for maturity (x ~ z). Notice there are 127 points for gain (y), but nearly a thousand for age(z)."
+```
 
 ```{r pick-your-own}
 # type your code for the Exercise here, and Knit
 boxplot(mage ~ mature, data = nc, ylab = "Mother's age in years")
 ```
 
+```{r observation, echo=FALSE}
+# type your code for the Exercise here, and Knit
+"As we can see, the outliers exist for mature mother's. So far this is good. We assume that young-mother's do not exceed the age of 35 years old. So to test this our null hypothesis will assume that the mean ages are the same while our alternate hypothesis examines whether (absolute) value of the difference of the means exceeds zero.  We will use a single-tailed test with a default confidence interval of 95%. Our critical value is 5%." 
+```
+
+
+<ol>
+<li><font color="blue" size="2">
+$H_0: \mu_{mature} = \mu_{young}$; $H_A: \mu_{mature} > \mu_{young}$, where $\alpha = 5%$
+</font>
+</li>
+</ol>
+```{r t-test}
+# type your code for the Exercise here, and Knit
+inference(y = mage, x = mature, data = nc, statistic = "mean", type = "ht", null = 0, alternative = "greater", method = "theoretical")
+
+```
+
+<ol>
+<li><font color="blue" size="2"> The results show that the null hypothesis is accepted to extremely high precision. We conclude that the maturity age cut-off is accurate. </font></li>
+</ol>
 
 <div id="license">
 This is a product of OpenIntro that is released under a [Creative Commons 
