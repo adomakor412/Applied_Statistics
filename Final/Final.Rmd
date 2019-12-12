@@ -1,0 +1,123 @@
+---
+title: "Applied Statistics Final Project"
+author: "Ronald aDomako"
+date: "December 18, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Load the required packages
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(openxlsx)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(maps)
+library(mapproj)
+```
+
+
+## Load data using openxlsx package
+
+```{r}
+column_names <- c("year", "month", "day", "hour", "LAT", "LON", "ISST","OSST", "OERR", "SI", "ICflag", "DS", "VS", "WDIR", "WSPD", "SLP", "AT", "WBT", "DPT", "CLT", "CLL")
+DB_33672 = read.csv("Proj05/DB_33944.csv", header = F, sep = ",")
+MB_41018 = read.csv("Proj05/MB_62413.csv", header = F, sep = ",")
+SH_GRHJ = read.csv("Proj05/SH_GDLS.csv", header = F, sep = ",")
+
+colnames(DB_33672) = column_names
+DB_33672 <- DB_33672 %>% mutate_if(is.factor,as.numeric)
+
+DB_33672$Date <- as.Date(paste0())
+
+colnames(MB_41018) = column_names
+MB_41018 <- MB_41018 %>% mutate_if(is.factor,as.numeric)
+
+colnames(SH_GRHJ) = column_names
+SH_GRHJ <- SH_GRHJ %>% mutate_if(is.factor,as.numeric)
+
+
+```
+
+# Some Exploratory Analysis
+
+```{r}
+#summary(DB_33672)
+```
+
+
+
+
+```{r}
+ p <- ggplot(MB_41018, aes(x = LON, y = LAT)) +
+    geom_point(aes(color = year))  
+#ggplotly(p)
+p
+```
+
+
+```{r}
+ p <- ggplot(SH_GRHJ, aes(x = LON, y = LAT)) +
+    geom_point(aes(color = year))  
+#ggplotly(p)
+p
+```
+
+
+
+```{r}
+ p <- ggplot(DB_33672, aes(x = LON, y = LAT)) +
+    geom_point(aes(color = year))  
+#ggplotly(p)
+p
+```
+
+```{r}
+x <- (DB_33672$ISST - DB_33672$OSST)
+hist(x)
+```
+
+```{r}
+ p <- ggplot(DB_33672, aes(x = ISST , y = OSST)) +
+    geom_point(aes(color = ISST - OSST))  
+#ggplotly(p)
+p
+```
+
+```{r}
+map("world")
+map.axes()
+points(SH_GRHJ$LON, SH_GRHJ$LAT, col= "blue")
+```
+
+```{r}
+map("world")
+map.axes()
+points(DB_33672$LON,DB_33672$LAT, col="blue")
+```
+
+```{r}
+ p <- ggplot(MB_41018, aes(x = month, y = ISST)) +
+    geom_point(aes(color = year))  
+#ggplotly(p)
+p
+```
+
+```{r}
+DB_33672 %>% group_by(year, month) %>%
+  summarise(mu = mean(ISST), pop_med = median(ISST), 
+            sigma = sd(ISST), pop_iqr = IQR(ISST),
+            pop_min = min(ISST), pop_max = max(ISST),
+            pop_q1 = quantile(ISST, 0.25),  # first quartile, 25th percentile
+            pop_q3 = quantile(ISST, 0.75))  # third quartile, 75th percentile
+```
+
+
+
+
